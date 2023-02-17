@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+  </head>
+  <body>
+
+  <!-- Algunos contenedores para molestar. -->
+  <div>
+    <div>
+      <div style="width:100%; overflow:hidden">
+        <div style="float:left">
+          <h3 style=""> Prueba de WebASSEMBLY, Rust y lo demust </h3>
+        </div>
+        <!-- Un botón para mostrar si el Wasm se cargó. -->
+        <div id="Loaded" style="background-color:red; width:20px; height:20px; display:table-cell">
+        </div>
+      </div>
+    <!-- Una Caja para poner el largo de la muestra -->
+    <input id='inputLen' type='text'></input>
+    <!-- Un botón -->
+    <div id='div_sos_boton' style='background-color:orange; width:100px; height: 50px'>
+      Clickeame!
+    </div>
+
+    <!-- Un contenedor para la basura que vamos a Generar -->
+    <div id='div_que_escupe_basura' style='background-color:ligthblue'>
+    </div>
+  </div>
+
+    <script type="module">
+      
+      import init, { compute_fft } from "./pkg/geosym_wasm.js";
+
+      // Cargar el Wasm y cambiar a verde el color del indicador
+      init().then(() => {
+        document.getElementById('Loaded').setAttribute('style',"background-color:green; width:20px; height:20px; display:table-cell");
+      });
+    </script>
+
+    <!-- acá cargaríamos el resto del html si existiera. -->
+
+    <script type="module">
+      import { compute_fft } from "./pkg/geosym_wasm.js";
+
+      // Creamos el evento de click del boton del div
+      document.getElementById('div_sos_boton').addEventListener('click', () => {
+      let largo = Number(document.getElementById('inputLen').value);
+      let ruido = [...Array(largo).keys()].map(Math.random);
+
+      let fft = compute_fft(largo,ruido);
+      let minvalue = Math.min(...fft);
+      let scale = 1.0/Math.sqrt(largo);
+
+      // Mostramos los primeros 200 valores en un grafiquito.
+      // porahi hay que mostrar el tiempo que tardo
+
+      let fftdivs = [...fft.slice(0,200)].map(function (x) {
+        let di = document.createElement('div');
+        di.setAttribute('style','background-color:blue; width:5px; float:left; height:'+(x-minvalue)*scale*70+'px');
+        return di;
+        });
+
+      // Valor Medio, No te queremos!
+      fftdivs.shift();
+
+      document.getElementById('div_que_escupe_basura').innerHTML = '';
+
+      [...fftdivs.keys()].forEach(function (i) {
+        document.getElementById('div_que_escupe_basura').appendChild(fftdivs[i]);
+        });
+
+      });
+    </script>
+
+  </body>
+</html>
+
