@@ -50,7 +50,7 @@
       let ruido = [...Array(largo).keys()].map(Math.random);
 
       let fft = compute_fft(largo,ruido);
-      let minvalue = Math.min(...fft);
+      let minvalue = Math.min.apply(null,fft.slice(0,201));
       let scale = 1.0/Math.sqrt(largo);
 
       // Mostramos los primeros 200 valores en un grafiquito.
