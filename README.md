@@ -19,3 +19,9 @@ python -m http.server
 ```
 
 o cosas así.
+
+# Etapa 1: Simulaciones 1d de referencia.
+
+Las simulaciones 1d que hay que empezar por implementar son como las que están en este repo:
+
+[https://github.com/jjclavijo/apio-divertido](https://github.com/jjclavijo/apio-divertido)
